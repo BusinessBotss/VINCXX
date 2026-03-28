@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,34 +8,58 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+    /* ── DARK (default) ── */
     :root {
-      --black: #080808;
-      --white: #f4f2ef;
-      --sand: #c9b99a;
-      --bronze: #a07850;
-      --dim: rgba(244,242,239,0.5);
-      --dimmer: rgba(244,242,239,0.15);
-      --border: rgba(244,242,239,0.1);
-      --border-strong: rgba(244,242,239,0.18);
+      --bg:            #080808;
+      --bg2:           #111111;
+      --white:         #f4f2ef;
+      --sand:          #c9b99a;
+      --bronze:        #a07850;
+      --dim:           rgba(244,242,239,0.5);
+      --dimmer:        rgba(244,242,239,0.15);
+      --border:        rgba(244,242,239,0.1);
+      --border-strong: rgba(244,242,239,0.2);
+      --chip-bg:       rgba(255,255,255,0.025);
+      --card-bg:       rgba(255,255,255,0.02);
+      --toggle-icon:   "☀️";
+
+      --tr: all 0.5s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── LIGHT ── */
+    [data-theme="light"] {
+      --bg:            #f0ede8;
+      --bg2:           #e5e1da;
+      --white:         #1a1814;
+      --sand:          #7a5c3a;
+      --bronze:        #8a5c2a;
+      --dim:           rgba(26,24,20,0.55);
+      --dimmer:        rgba(26,24,20,0.3);
+      --border:        rgba(26,24,20,0.1);
+      --border-strong: rgba(26,24,20,0.2);
+      --chip-bg:       rgba(0,0,0,0.03);
+      --card-bg:       rgba(0,0,0,0.02);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--black);
+      background: var(--bg);
       color: var(--white);
       font-family: 'DM Sans', sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
+      transition: background 0.5s cubic-bezier(.4,0,.2,1), color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
+    /* grain */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       z-index: 9999;
       pointer-events: none;
-      opacity: 0.035;
+      opacity: 0.03;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
@@ -44,19 +68,26 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ── LANG BAR ── */
-    .lang-bar {
+    /* ── TOP BAR ── */
+    .top-bar {
       display: flex;
-      justify-content: center;
-      gap: 4px;
-      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
       padding: 22px 20px 0;
       max-width: 440px;
       margin: 0 auto;
+      gap: 12px;
+    }
+
+    /* LANG */
+    .lang-bar {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
     }
 
     .lang-btn {
-      padding: 5px 13px;
+      padding: 5px 11px;
       border-radius: 100px;
       border: 1px solid var(--border);
       background: transparent;
@@ -67,21 +98,56 @@
       font-weight: 500;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      transition: all 0.25s;
+      transition: var(--tr);
     }
 
     .lang-btn:hover,
     .lang-btn.active {
       background: var(--white);
-      color: var(--black);
+      color: var(--bg);
       border-color: var(--white);
+    }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      flex-shrink: 0;
+      width: 52px;
+      height: 28px;
+      border-radius: 100px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      position: relative;
+      transition: var(--tr);
+      display: flex;
+      align-items: center;
+      padding: 3px;
+    }
+
+    .theme-toggle:hover { border-color: var(--border-strong); }
+
+    .toggle-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--white);
+      transition: var(--tr);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      line-height: 1;
+    }
+
+    [data-theme="light"] .toggle-thumb {
+      transform: translateX(24px);
     }
 
     /* ── PAGE ── */
     .page {
       max-width: 440px;
       margin: 0 auto;
-      padding: 24px 20px 60px;
+      padding: 20px 20px 60px;
       display: flex;
       flex-direction: column;
     }
@@ -95,6 +161,7 @@
       overflow: hidden;
       border: 1px solid var(--border-strong);
       animation: fadeUp 0.7s cubic-bezier(.4,0,.2,1) both;
+      transition: border-color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .profile-card img {
@@ -111,17 +178,26 @@
       to   { transform: scale(1.04); }
     }
 
-    .profile-card::after {
-      content: '';
+    .profile-card-overlay {
       position: absolute;
       inset: 0;
       background: linear-gradient(
         to bottom,
         transparent 28%,
-        rgba(8,8,8,0.45) 62%,
-        rgba(8,8,8,0.92) 100%
+        rgba(8,8,8,0.4) 62%,
+        rgba(8,8,8,0.9) 100%
       );
+      transition: background 0.5s cubic-bezier(.4,0,.2,1);
       pointer-events: none;
+    }
+
+    [data-theme="light"] .profile-card-overlay {
+      background: linear-gradient(
+        to bottom,
+        transparent 25%,
+        rgba(240,237,232,0.35) 58%,
+        rgba(240,237,232,0.88) 100%
+      );
     }
 
     .profile-card-text {
@@ -139,23 +215,31 @@
       align-items: center;
       gap: 6px;
       padding: 4px 12px;
-      border: 1px solid rgba(244,242,239,0.2);
+      border: 1px solid rgba(244,242,239,0.22);
       border-radius: 100px;
       background: rgba(8,8,8,0.45);
       backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       font-size: 9px;
       font-weight: 500;
       letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: var(--sand);
+      color: #c9b99a;
       width: fit-content;
+      transition: var(--tr);
+    }
+
+    [data-theme="light"] .badge {
+      border-color: rgba(26,24,20,0.18);
+      background: rgba(240,237,232,0.55);
+      color: #7a5c3a;
     }
 
     .badge::before {
       content: '';
       width: 5px; height: 5px;
       border-radius: 50%;
-      background: var(--sand);
+      background: currentColor;
       animation: blink 2.2s ease-in-out infinite;
       flex-shrink: 0;
     }
@@ -171,6 +255,7 @@
       line-height: 0.92;
       letter-spacing: 0.05em;
       color: var(--white);
+      transition: color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .profile-sub {
@@ -179,6 +264,7 @@
       font-size: 13px;
       color: var(--sand);
       letter-spacing: 0.04em;
+      transition: color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .profile-location {
@@ -187,6 +273,7 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--dim);
+      transition: color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     /* ── SECTION LABEL ── */
@@ -199,6 +286,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      transition: color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .section-tag::after {
@@ -206,6 +294,7 @@
       flex: 1;
       height: 1px;
       background: var(--border);
+      transition: background 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     /* ── BIO ── */
@@ -213,6 +302,7 @@
       padding: 28px 0 24px;
       border-bottom: 1px solid var(--border);
       animation: fadeUp 0.7s 0.15s cubic-bezier(.4,0,.2,1) both;
+      transition: border-color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .bio-text {
@@ -220,11 +310,13 @@
       line-height: 1.82;
       font-weight: 300;
       color: var(--dim);
+      transition: color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .bio-text strong {
       color: var(--white);
       font-weight: 400;
+      transition: color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .langs {
@@ -242,7 +334,8 @@
       font-weight: 400;
       letter-spacing: 0.1em;
       color: var(--sand);
-      background: rgba(255,255,255,0.025);
+      background: var(--chip-bg);
+      transition: var(--tr);
     }
 
     /* ── LIFESTYLE ── */
@@ -250,6 +343,7 @@
       padding: 24px 0;
       border-bottom: 1px solid var(--border);
       animation: fadeUp 0.7s 0.22s cubic-bezier(.4,0,.2,1) both;
+      transition: border-color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .lifestyle-intro {
@@ -258,11 +352,13 @@
       font-weight: 300;
       color: var(--dim);
       margin-bottom: 16px;
+      transition: color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .lifestyle-intro strong {
       color: var(--white);
       font-weight: 400;
+      transition: color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .services-grid {
@@ -278,10 +374,11 @@
       padding: 11px 13px;
       border: 1px solid var(--border);
       border-radius: 11px;
-      background: rgba(255,255,255,0.025);
+      background: var(--chip-bg);
       font-size: 11.5px;
       font-weight: 300;
       color: var(--dim);
+      transition: var(--tr);
     }
 
     .chip-dot {
@@ -289,6 +386,7 @@
       border-radius: 50%;
       background: var(--bronze);
       flex-shrink: 0;
+      transition: background 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     /* ── GALLERY ── */
@@ -296,6 +394,7 @@
       padding: 24px 0;
       border-bottom: 1px solid var(--border);
       animation: fadeUp 0.7s 0.3s cubic-bezier(.4,0,.2,1) both;
+      transition: border-color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .gallery-scroll {
@@ -319,6 +418,7 @@
       border-radius: 10px;
       overflow: hidden;
       border: 1px solid var(--border);
+      transition: border-color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .gallery-item.wide { width: 182px; }
@@ -341,6 +441,7 @@
       margin-top: 22px;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
+      transition: border-color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .stat-cell {
@@ -348,6 +449,7 @@
       padding: 18px 10px;
       text-align: center;
       border-right: 1px solid var(--border);
+      transition: border-color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .stat-cell:last-child { border-right: none; }
@@ -358,6 +460,7 @@
       letter-spacing: 0.04em;
       color: var(--white);
       line-height: 1;
+      transition: color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .stat-lbl {
@@ -367,6 +470,7 @@
       color: var(--dim);
       margin-top: 4px;
       font-weight: 300;
+      transition: color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     /* ── LINKS ── */
@@ -385,10 +489,10 @@
       padding: 15px 16px;
       border: 1px solid var(--border);
       border-radius: 14px;
-      background: rgba(255,255,255,0.02);
+      background: var(--card-bg);
       text-decoration: none;
       color: var(--white);
-      transition: all 0.3s cubic-bezier(.4,0,.2,1);
+      transition: var(--tr);
       position: relative;
       overflow: hidden;
     }
@@ -397,7 +501,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(255,255,255,0.025);
+      background: rgba(128,128,128,0.04);
       opacity: 0;
       transition: opacity 0.3s;
     }
@@ -408,11 +512,12 @@
     .link-icon {
       width: 40px; height: 40px;
       border-radius: 10px;
-      background: rgba(255,255,255,0.06);
+      background: var(--chip-bg);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      transition: var(--tr);
     }
 
     .link-icon svg { width: 20px; height: 20px; }
@@ -429,6 +534,7 @@
       color: var(--dim);
       font-weight: 300;
       margin-top: 1px;
+      transition: color 0.5s cubic-bezier(.4,0,.2,1);
     }
 
     .link-arrow {
@@ -439,7 +545,7 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      transition: all 0.3s;
+      transition: var(--tr);
     }
 
     .link-arrow svg {
@@ -449,11 +555,11 @@
       stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
-      transition: all 0.3s;
+      transition: var(--tr);
     }
 
     .link-card:hover .link-arrow { border-color: var(--sand); background: var(--sand); }
-    .link-card:hover .link-arrow svg { stroke: var(--black); transform: rotate(45deg); }
+    .link-card:hover .link-arrow svg { stroke: var(--bg); transform: rotate(45deg); }
 
     .link-card.wa {
       background: rgba(37,211,102,0.04);
@@ -470,25 +576,33 @@
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--dimmer);
+      transition: color 0.5s cubic-bezier(.4,0,.2,1);
     }
   </style>
 </head>
 <body>
 
-<div class="lang-bar">
-  <button class="lang-btn active" data-lang="en">EN</button>
-  <button class="lang-btn" data-lang="de">DE</button>
-  <button class="lang-btn" data-lang="fr">FR</button>
-  <button class="lang-btn" data-lang="it">IT</button>
-  <button class="lang-btn" data-lang="ru">RU</button>
-  <button class="lang-btn" data-lang="pt">PT</button>
+<!-- TOP BAR: lang + theme toggle -->
+<div class="top-bar">
+  <div class="lang-bar">
+    <button class="lang-btn active" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="de">DE</button>
+    <button class="lang-btn" data-lang="fr">FR</button>
+    <button class="lang-btn" data-lang="it">IT</button>
+    <button class="lang-btn" data-lang="ru">RU</button>
+    <button class="lang-btn" data-lang="pt">PT</button>
+  </div>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <div class="toggle-thumb" id="toggleThumb">🌙</div>
+  </button>
 </div>
 
 <div class="page">
 
   <!-- PROFILE CARD 4:5 -->
   <div class="profile-card">
-    <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774708573/VIN_36_Medium_d10hih.png" alt="Vinicius Ferreira" />
+    <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774706417/VIN_20_Medium_dh3xgj.png" alt="Vinicius Ferreira" />
+    <div class="profile-card-overlay"></div>
     <div class="profile-card-text">
       <div class="badge" data-i18n="badge">Model · Lifestyle · Hospitality</div>
       <h1 class="profile-name">VINICIUS<br>FERREIRA</h1>
@@ -528,10 +642,22 @@
     <p class="section-tag" data-i18n="portfolio_label">Portfolio</p>
     <div class="gallery-scroll" id="galleryScroll">
       <div class="gallery-item wide">
-        <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774707782/_DSC6014_ov19bh.jpg" alt="" />
+        <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774708573/VIN_36_Medium_d10hih.png" alt="" />
       </div>
       <div class="gallery-item">
-        <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774706178/VIN_25_sefxep.jpg" alt="" />
+        <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774706229/DSC_0060_kf1xdq.jpg" alt="" />
+      </div>
+      <div class="gallery-item">
+        <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774709249/VIN_13_Small_vhwloq.jpg" alt="" />
+      </div>
+      <div class="gallery-item">
+        <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774709249/Vinni-68_Small_tmf1nc.jpg" alt="" />
+      </div>
+      <div class="gallery-item">
+        <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774709249/Vinni-80_Small_wh0koa.jpg" alt="" />
+      </div>
+      <div class="gallery-item">
+        <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774706488/VIN_22_Medium_v0uwwz.png" alt="" />
       </div>
       <div class="gallery-item">
         <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774706221/DSC_0104_qf0sfr.jpg" alt="" />
@@ -543,13 +669,13 @@
         <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774705997/Vinni-84_qux5sh.jpg" alt="" />
       </div>
       <div class="gallery-item">
+        <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774706178/VIN_25_sefxep.jpg" alt="" />
+      </div>
+      <div class="gallery-item">
         <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774706380/VIN_15_mxyvun.jpg" alt="" />
       </div>
       <div class="gallery-item">
         <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774706461/VIN_27_Medium_u2gk83.png" alt="" />
-      </div>
-      <div class="gallery-item">
-        <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774706417/VIN_20_Medium_dh3xgj.png" alt="" />
       </div>
       <div class="gallery-item">
         <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774706142/IMG_3338_pexhdr.jpg" alt="" />
@@ -603,7 +729,7 @@
 
     <a href="https://www.tiktok.com/@iamvinncx?_r=1&_t=ZN-94n2XzLdMX8" target="_blank" class="link-card">
       <div class="link-icon">
-        <svg viewBox="0 0 24 24" fill="#f4f2ef">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="color:var(--white)">
           <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.79 1.54V6.79a4.85 4.85 0 01-1.02-.1z"/>
         </svg>
       </div>
@@ -623,7 +749,7 @@
         </svg>
       </div>
       <div class="link-text">
-        <div class="link-name" data-i18n="wa_label">WhatsApp</div>
+        <div class="link-name">WhatsApp</div>
         <div class="link-handle">+34 649 08 92 22</div>
       </div>
       <div class="link-arrow">
@@ -636,102 +762,97 @@
 </div>
 
 <script>
+/* ── TRANSLATIONS ── */
 const T = {
   en: {
-    badge: "Model · Lifestyle · Hospitality",
-    profile_sub: "Brazil born · Marbella based",
-    profile_location: "Costa del Sol, Spain",
-    about_label: "About",
-    about_text: `<strong>Multilingual professional</strong> with 5+ years across sales, customer service and luxury hospitality. Born in Brazil, shaped by a global mindset — now building a <strong>modeling career</strong> on the Costa del Sol. Fluent in 4 languages, I thrive where communication, image and relationship-building define the experience.`,
-    lifestyle_label: "Lifestyle & Nightlife",
-    lifestyle_text: `<strong>Well-connected lifestyle consultant</strong> in Marbella. VIP access, exclusive reservations and unforgettable experiences — top nightclubs, beach clubs, private villas and premium dining. You enjoy, I handle every detail.`,
-    s1:"Nightclubs & VIP", s2:"Beach & Pool Clubs", s3:"Premium Dining",
-    s4:"Private Villas", s5:"Car Rentals", s6:"Bespoke Concierge",
-    portfolio_label: "Portfolio",
-    stat_exp: "Years exp.", stat_lang: "Languages", stat_loc: "Based",
-    connect_label: "Connect",
-    wa_label: "WhatsApp",
-    footer: "© 2026 Vinicius Ferreira · Marbella, Spain",
+    badge:"Model · Lifestyle · Hospitality",
+    profile_sub:"Brazil born · Marbella based",
+    profile_location:"Costa del Sol, Spain",
+    about_label:"About",
+    about_text:`<strong>Multilingual professional</strong> with 5+ years across sales, customer service and luxury hospitality. Born in Brazil, shaped by a global mindset — now building a <strong>modeling career</strong> on the Costa del Sol. Fluent in 4 languages, I thrive where communication, image and relationship-building define the experience.`,
+    lifestyle_label:"Lifestyle & Nightlife",
+    lifestyle_text:`<strong>Well-connected lifestyle consultant</strong> in Marbella. VIP access, exclusive reservations and unforgettable experiences — top nightclubs, beach clubs, private villas and premium dining. You enjoy, I handle every detail.`,
+    s1:"Nightclubs & VIP",s2:"Beach & Pool Clubs",s3:"Premium Dining",
+    s4:"Private Villas",s5:"Car Rentals",s6:"Bespoke Concierge",
+    portfolio_label:"Portfolio",
+    stat_exp:"Years exp.",stat_lang:"Languages",stat_loc:"Based",
+    connect_label:"Connect",
+    footer:"© 2026 Vinicius Ferreira · Marbella, Spain",
   },
   de: {
-    badge: "Model · Lifestyle · Hotellerie",
-    profile_sub: "Aus Brasilien · Wohnhaft in Marbella",
-    profile_location: "Costa del Sol, Spanien",
-    about_label: "Über mich",
-    about_text: `<strong>Mehrsprachiger Profi</strong> mit über 5 Jahren Erfahrung in Vertrieb, Kundenservice und Luxushotellerie. In Brasilien geboren, geprägt von einem globalen Blick — jetzt im Aufbau einer <strong>Modelkarriere</strong> an der Costa del Sol. Fließend in 4 Sprachen, gedeihe ich überall dort, wo Kommunikation, Auftritt und Beziehungsaufbau zählen.`,
-    lifestyle_label: "Lifestyle & Nachtleben",
-    lifestyle_text: `<strong>Bestens vernetzter Lifestyle-Berater</strong> in Marbella. VIP-Zugang, exklusive Reservierungen und unvergessliche Erlebnisse — Top-Nachtclubs, Beach Clubs, Privatvillen und Gourmetrestaurants. Sie genießen, ich kümmere mich um jeden Detail.`,
-    s1:"Nachtclubs & VIP", s2:"Beach & Pool Clubs", s3:"Gourmetrestaurants",
-    s4:"Privatvillen", s5:"Autovermietung", s6:"Maßgeschneiderter Concierge",
-    portfolio_label: "Portfolio",
-    stat_exp: "Jahre Erfahrung", stat_lang: "Sprachen", stat_loc: "Standort",
-    connect_label: "Kontakt",
-    wa_label: "WhatsApp",
-    footer: "© 2026 Vinicius Ferreira · Marbella, Spanien",
+    badge:"Model · Lifestyle · Hotellerie",
+    profile_sub:"Aus Brasilien · Wohnhaft in Marbella",
+    profile_location:"Costa del Sol, Spanien",
+    about_label:"Über mich",
+    about_text:`<strong>Mehrsprachiger Profi</strong> mit über 5 Jahren Erfahrung in Vertrieb, Kundenservice und Luxushotellerie. In Brasilien geboren, geprägt von einem globalen Blick — jetzt im Aufbau einer <strong>Modelkarriere</strong> an der Costa del Sol. Fließend in 4 Sprachen, gedeihe ich überall dort, wo Kommunikation, Auftritt und Beziehungsaufbau zählen.`,
+    lifestyle_label:"Lifestyle & Nachtleben",
+    lifestyle_text:`<strong>Bestens vernetzter Lifestyle-Berater</strong> in Marbella. VIP-Zugang, exklusive Reservierungen und unvergessliche Erlebnisse — Top-Nachtclubs, Beach Clubs, Privatvillen und Gourmetrestaurants. Sie genießen, ich kümmere mich um jeden Detail.`,
+    s1:"Nachtclubs & VIP",s2:"Beach & Pool Clubs",s3:"Gourmetrestaurants",
+    s4:"Privatvillen",s5:"Autovermietung",s6:"Maßgeschneiderter Concierge",
+    portfolio_label:"Portfolio",
+    stat_exp:"Jahre Erfahrung",stat_lang:"Sprachen",stat_loc:"Standort",
+    connect_label:"Kontakt",
+    footer:"© 2026 Vinicius Ferreira · Marbella, Spanien",
   },
   fr: {
-    badge: "Mannequin · Lifestyle · Hôtellerie",
-    profile_sub: "Né au Brésil · Basé à Marbella",
-    profile_location: "Costa del Sol, Espagne",
-    about_label: "À propos",
-    about_text: `<strong>Professionnel multilingue</strong> avec plus de 5 ans d'expérience en vente, service client et hôtellerie de luxe. Né au Brésil, façonné par une vision mondiale — en train de construire une <strong>carrière de mannequin</strong> sur la Costa del Sol. Maîtrisant 4 langues, j'excelle là où la communication, l'image et les relations humaines font la différence.`,
-    lifestyle_label: "Lifestyle & Vie Nocturne",
-    lifestyle_text: `<strong>Consultant lifestyle bien connecté</strong> à Marbella. Accès VIP, réservations exclusives et expériences inoubliables — clubs branchés, beach clubs, villas privées et gastronomie haut de gamme. Vous profitez, je m'occupe de chaque détail.`,
-    s1:"Clubs & VIP", s2:"Beach & Pool Clubs", s3:"Gastronomie Premium",
-    s4:"Villas Privées", s5:"Location de Voitures", s6:"Conciergerie Sur Mesure",
-    portfolio_label: "Portfolio",
-    stat_exp: "Ans d'expérience", stat_lang: "Langues", stat_loc: "Basé à",
-    connect_label: "Contact",
-    wa_label: "WhatsApp",
-    footer: "© 2026 Vinicius Ferreira · Marbella, Espagne",
+    badge:"Mannequin · Lifestyle · Hôtellerie",
+    profile_sub:"Né au Brésil · Basé à Marbella",
+    profile_location:"Costa del Sol, Espagne",
+    about_label:"À propos",
+    about_text:`<strong>Professionnel multilingue</strong> avec plus de 5 ans d'expérience en vente, service client et hôtellerie de luxe. Né au Brésil, façonné par une vision mondiale — en train de construire une <strong>carrière de mannequin</strong> sur la Costa del Sol. Maîtrisant 4 langues, j'excelle là où la communication, l'image et les relations humaines font la différence.`,
+    lifestyle_label:"Lifestyle & Vie Nocturne",
+    lifestyle_text:`<strong>Consultant lifestyle bien connecté</strong> à Marbella. Accès VIP, réservations exclusives et expériences inoubliables — clubs branchés, beach clubs, villas privées et gastronomie haut de gamme. Vous profitez, je m'occupe de chaque détail.`,
+    s1:"Clubs & VIP",s2:"Beach & Pool Clubs",s3:"Gastronomie Premium",
+    s4:"Villas Privées",s5:"Location de Voitures",s6:"Conciergerie Sur Mesure",
+    portfolio_label:"Portfolio",
+    stat_exp:"Ans d'expérience",stat_lang:"Langues",stat_loc:"Basé à",
+    connect_label:"Contact",
+    footer:"© 2026 Vinicius Ferreira · Marbella, Espagne",
   },
   it: {
-    badge: "Modello · Lifestyle · Ospitalità",
-    profile_sub: "Nato in Brasile · Basato a Marbella",
-    profile_location: "Costa del Sol, Spagna",
-    about_label: "Chi sono",
-    about_text: `<strong>Professionista multilingue</strong> con 5+ anni tra vendite, servizio clienti e ospitalità di lusso. Nato in Brasile, formato da una visione globale — ora costruendo una <strong>carriera nel mondo della moda</strong> sulla Costa del Sol. Fluente in 4 lingue, eccello dove comunicazione, immagine e relazioni umane fanno la differenza.`,
-    lifestyle_label: "Lifestyle & Vita Notturna",
-    lifestyle_text: `<strong>Consulente lifestyle con forti connessioni</strong> a Marbella. Accesso VIP, prenotazioni esclusive ed esperienze indimenticabili — i migliori nightclub, beach club, ville private e ristoranti premium. Tu ti godi il momento, io penso a tutto il resto.`,
-    s1:"Nightclub & VIP", s2:"Beach & Pool Club", s3:"Ristorazione Premium",
-    s4:"Ville Private", s5:"Noleggio Auto", s6:"Concierge Personalizzato",
-    portfolio_label: "Portfolio",
-    stat_exp: "Anni di exp.", stat_lang: "Lingue", stat_loc: "Base",
-    connect_label: "Contatti",
-    wa_label: "WhatsApp",
-    footer: "© 2026 Vinicius Ferreira · Marbella, Spagna",
+    badge:"Modello · Lifestyle · Ospitalità",
+    profile_sub:"Nato in Brasile · Basato a Marbella",
+    profile_location:"Costa del Sol, Spagna",
+    about_label:"Chi sono",
+    about_text:`<strong>Professionista multilingue</strong> con 5+ anni tra vendite, servizio clienti e ospitalità di lusso. Nato in Brasile, formato da una visione globale — ora costruendo una <strong>carriera nel mondo della moda</strong> sulla Costa del Sol. Fluente in 4 lingue, eccello dove comunicazione, immagine e relazioni umane fanno la differenza.`,
+    lifestyle_label:"Lifestyle & Vita Notturna",
+    lifestyle_text:`<strong>Consulente lifestyle con forti connessioni</strong> a Marbella. Accesso VIP, prenotazioni esclusive ed esperienze indimenticabili — i migliori nightclub, beach club, ville private e ristoranti premium. Tu ti godi il momento, io penso a tutto il resto.`,
+    s1:"Nightclub & VIP",s2:"Beach & Pool Club",s3:"Ristorazione Premium",
+    s4:"Ville Private",s5:"Noleggio Auto",s6:"Concierge Personalizzato",
+    portfolio_label:"Portfolio",
+    stat_exp:"Anni di exp.",stat_lang:"Lingue",stat_loc:"Base",
+    connect_label:"Contatti",
+    footer:"© 2026 Vinicius Ferreira · Marbella, Spagna",
   },
   ru: {
-    badge: "Модель · Лайфстайл · Гостеприимство",
-    profile_sub: "Родом из Бразилии · Живёт в Марбелье",
-    profile_location: "Коста-дель-Соль, Испания",
-    about_label: "Обо мне",
-    about_text: `<strong>Многоязычный специалист</strong> с более чем 5-летним опытом в продажах, обслуживании клиентов и люкс-гостеприимстве. Родом из Бразилии, с глобальным мышлением — сейчас строю <strong>карьеру модели</strong> на Коста-дель-Соль. Свободно владею 4 языками и раскрываю свой потенциал там, где важны общение, имидж и построение отношений.`,
-    lifestyle_label: "Лайфстайл и Ночная жизнь",
-    lifestyle_text: `<strong>Лайфстайл-консультант</strong> с широкими связями в Марбелье. VIP-доступ, эксклюзивные бронирования и незабываемые впечатления — лучшие ночные клубы, пляжные клубы, частные виллы и рестораны премиум-класса. Вы наслаждаетесь, я забочусь о каждой детали.`,
-    s1:"Клубы и VIP", s2:"Пляжные клубы", s3:"Премиум-рестораны",
-    s4:"Частные виллы", s5:"Аренда авто", s6:"Консьерж-сервис",
-    portfolio_label: "Портфолио",
-    stat_exp: "Лет опыта", stat_lang: "Языки", stat_loc: "Город",
-    connect_label: "Связаться",
-    wa_label: "WhatsApp",
-    footer: "© 2026 Vinicius Ferreira · Марбелья, Испания",
+    badge:"Модель · Лайфстайл · Гостеприимство",
+    profile_sub:"Родом из Бразилии · Живёт в Марбелье",
+    profile_location:"Коста-дель-Соль, Испания",
+    about_label:"Обо мне",
+    about_text:`<strong>Многоязычный специалист</strong> с более чем 5-летним опытом в продажах, обслуживании клиентов и люкс-гостеприимстве. Родом из Бразилии, с глобальным мышлением — сейчас строю <strong>карьеру модели</strong> на Коста-дель-Соль. Свободно владею 4 языками и раскрываю свой потенциал там, где важны общение, имидж и построение отношений.`,
+    lifestyle_label:"Лайфстайл и Ночная жизнь",
+    lifestyle_text:`<strong>Лайфстайл-консультант</strong> с широкими связями в Марбелье. VIP-доступ, эксклюзивные бронирования и незабываемые впечатления — лучшие ночные клубы, пляжные клубы, частные виллы и рестораны премиум-класса. Вы наслаждаетесь, я забочусь о каждой детали.`,
+    s1:"Клубы и VIP",s2:"Пляжные клубы",s3:"Премиум-рестораны",
+    s4:"Частные виллы",s5:"Аренда авто",s6:"Консьерж-сервис",
+    portfolio_label:"Портфолио",
+    stat_exp:"Лет опыта",stat_lang:"Языки",stat_loc:"Город",
+    connect_label:"Связаться",
+    footer:"© 2026 Vinicius Ferreira · Марбелья, Испания",
   },
   pt: {
-    badge: "Modelo · Lifestyle · Hospitalidade",
-    profile_sub: "Nascido no Brasil · Baseado em Marbella",
-    profile_location: "Costa del Sol, Espanha",
-    about_label: "Sobre mim",
-    about_text: `<strong>Profissional multilíngue</strong> com mais de 5 anos em vendas, atendimento ao cliente e hospitalidade de luxo. Nascido no Brasil, moldado por uma visão global — agora construindo uma <strong>carreira no mundo da moda</strong> na Costa del Sol. Fluente em 4 idiomas, me destaco onde comunicação, imagem e relacionamentos fazem a diferença.`,
-    lifestyle_label: "Lifestyle & Vida Noturna",
-    lifestyle_text: `<strong>Consultor de lifestyle bem conectado</strong> em Marbella. Acesso VIP, reservas exclusivas e experiências inesquecíveis — os melhores nightclubs, beach clubs, vilas privadas e restaurantes premium. Você aproveita, eu cuido de cada detalhe.`,
-    s1:"Nightclubs & VIP", s2:"Beach & Pool Clubs", s3:"Gastronomia Premium",
-    s4:"Vilas Privadas", s5:"Aluguel de Carros", s6:"Concierge Personalizado",
-    portfolio_label: "Portfólio",
-    stat_exp: "Anos de exp.", stat_lang: "Idiomas", stat_loc: "Base",
-    connect_label: "Contato",
-    wa_label: "WhatsApp",
-    footer: "© 2026 Vinicius Ferreira · Marbella, Espanha",
+    badge:"Modelo · Lifestyle · Hospitalidade",
+    profile_sub:"Nascido no Brasil · Baseado em Marbella",
+    profile_location:"Costa del Sol, Espanha",
+    about_label:"Sobre mim",
+    about_text:`<strong>Profissional multilíngue</strong> com mais de 5 anos em vendas, atendimento ao cliente e hospitalidade de luxo. Nascido no Brasil, moldado por uma visão global — agora construindo uma <strong>carreira no mundo da moda</strong> na Costa del Sol. Fluente em 4 idiomas, me destaco onde comunicação, imagem e relacionamentos fazem a diferença.`,
+    lifestyle_label:"Lifestyle & Vida Noturna",
+    lifestyle_text:`<strong>Consultor de lifestyle bem conectado</strong> em Marbella. Acesso VIP, reservas exclusivas e experiências inesquecíveis — os melhores nightclubs, beach clubs, vilas privadas e restaurantes premium. Você aproveita, eu cuido de cada detalhe.`,
+    s1:"Nightclubs & VIP",s2:"Beach & Pool Clubs",s3:"Gastronomia Premium",
+    s4:"Vilas Privadas",s5:"Aluguel de Carros",s6:"Concierge Personalizado",
+    portfolio_label:"Portfólio",
+    stat_exp:"Anos de exp.",stat_lang:"Idiomas",stat_loc:"Base",
+    connect_label:"Contato",
+    footer:"© 2026 Vinicius Ferreira · Marbella, Espanha",
   },
 };
 
@@ -752,7 +873,18 @@ document.querySelectorAll('.lang-btn').forEach(btn =>
 );
 applyLang('en');
 
-/* drag-to-scroll */
+/* ── THEME TOGGLE ── */
+const html = document.documentElement;
+const thumb = document.getElementById('toggleThumb');
+let isDark = true;
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+  isDark = !isDark;
+  html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  thumb.textContent = isDark ? '🌙' : '☀️';
+});
+
+/* ── DRAG GALLERY ── */
 const gallery = document.getElementById('galleryScroll');
 let isDown = false, startX, scrollLeft;
 gallery.addEventListener('mousedown', e => { isDown = true; startX = e.pageX - gallery.offsetLeft; scrollLeft = gallery.scrollLeft; });
