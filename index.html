@@ -568,6 +568,18 @@
     .link-card.wa:hover { border-color: rgba(37,211,102,0.32); background: rgba(37,211,102,0.07); }
     .link-card.wa .link-icon { background: rgba(37,211,102,0.1); }
 
+    .link-card.portfolio-card {
+      background: rgba(201,185,154,0.05);
+      border-color: rgba(201,185,154,0.18);
+    }
+    .link-card.portfolio-card:hover {
+      border-color: rgba(201,185,154,0.38);
+      background: rgba(201,185,154,0.09);
+    }
+    .link-card.portfolio-card .link-icon {
+      background: rgba(201,185,154,0.1);
+    }
+
     /* ── FOOTER ── */
     .footer {
       text-align: center;
@@ -666,7 +678,7 @@
         <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774706197/Vinni-58_pko8ai.jpg" alt="" />
       </div>
       <div class="gallery-item">
-        <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774708909/Vinni-64_gpoddg.jpg" alt="" />
+        <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774705997/Vinni-84_qux5sh.jpg" alt="" />
       </div>
       <div class="gallery-item">
         <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1774706178/VIN_25_sefxep.jpg" alt="" />
@@ -756,6 +768,24 @@
         <svg viewBox="0 0 24 24"><polyline points="7 17 17 7"/><polyline points="7 7 17 7 17 17"/></svg>
       </div>
     </a>
+
+    <a href="https://heyzine.com/flip-book/9336198d30.html" target="_blank" class="link-card portfolio-card">
+      <div class="link-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--sand)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+      </div>
+      <div class="link-text">
+        <div class="link-name" data-i18n="portfolio_link_name">Model Portfolio</div>
+        <div class="link-handle" data-i18n="portfolio_link_handle">View full lookbook</div>
+      </div>
+      <div class="link-arrow">
+        <svg viewBox="0 0 24 24"><polyline points="7 17 17 7"/><polyline points="7 7 17 7 17 17"/></svg>
+      </div>
+    </a>
   </section>
 
   <footer class="footer" data-i18n="footer">© 2026 Vinicius Ferreira · Marbella, Spain</footer>
@@ -778,6 +808,8 @@ const T = {
     stat_exp:"Years exp.",stat_lang:"Languages",stat_loc:"Based",
     connect_label:"Connect",
     footer:"© 2026 Vinicius Ferreira · Marbella, Spain",
+    portfolio_link_name:"Model Portfolio",
+    portfolio_link_handle:"View full lookbook",
   },
   de: {
     badge:"Model · Lifestyle · Hotellerie",
@@ -793,6 +825,8 @@ const T = {
     stat_exp:"Jahre Erfahrung",stat_lang:"Sprachen",stat_loc:"Standort",
     connect_label:"Kontakt",
     footer:"© 2026 Vinicius Ferreira · Marbella, Spanien",
+    portfolio_link_name:"Model Portfolio",
+    portfolio_link_handle:"Lookbook ansehen",
   },
   fr: {
     badge:"Mannequin · Lifestyle · Hôtellerie",
@@ -808,6 +842,8 @@ const T = {
     stat_exp:"Ans d'expérience",stat_lang:"Langues",stat_loc:"Basé à",
     connect_label:"Contact",
     footer:"© 2026 Vinicius Ferreira · Marbella, Espagne",
+    portfolio_link_name:"Portfolio Mannequin",
+    portfolio_link_handle:"Voir le lookbook complet",
   },
   it: {
     badge:"Modello · Lifestyle · Ospitalità",
@@ -823,6 +859,8 @@ const T = {
     stat_exp:"Anni di exp.",stat_lang:"Lingue",stat_loc:"Base",
     connect_label:"Contatti",
     footer:"© 2026 Vinicius Ferreira · Marbella, Spagna",
+    portfolio_link_name:"Portfolio Modello",
+    portfolio_link_handle:"Sfoglia il lookbook completo",
   },
   ru: {
     badge:"Модель · Лайфстайл · Гостеприимство",
@@ -838,6 +876,8 @@ const T = {
     stat_exp:"Лет опыта",stat_lang:"Языки",stat_loc:"Город",
     connect_label:"Связаться",
     footer:"© 2026 Vinicius Ferreira · Марбелья, Испания",
+    portfolio_link_name:"Портфолио модели",
+    portfolio_link_handle:"Открыть лукбук",
   },
   pt: {
     badge:"Modelo · Lifestyle · Hospitalidade",
@@ -853,6 +893,8 @@ const T = {
     stat_exp:"Anos de exp.",stat_lang:"Idiomas",stat_loc:"Base",
     connect_label:"Contato",
     footer:"© 2026 Vinicius Ferreira · Marbella, Espanha",
+    portfolio_link_name:"Portfólio de Modelo",
+    portfolio_link_handle:"Ver o lookbook completo",
   },
 };
 
